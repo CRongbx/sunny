@@ -1,0 +1,58 @@
+<view class="container">
+  <view class="tool">
+    <view class="icons">
+      <image catchtap="onPowerTap" src="{{isPowerOn? '/images/power_off.png' : '/images/power_on.png'}}"></image>
+      <image catchtap="onRefreshTap" class="position_img" src="/images/refresh.png"></image>
+    </view>
+    <view class="horizon"></view>
+  </view>
+  <view>
+    <text>伞状态：</text>
+    <text>{{isPowerOn ? "打开" : "关闭"}}</text>
+  </view>
+  <view>
+    <text>经度：</text>
+    <text>{{longitude}}</text>
+  </view>
+  <view>
+    <text>纬度：</text>
+    <text>{{latitude}}</text>
+  </view>
+  <view>
+    <text>天气状况：晴</text>
+  </view>
+  <view>
+    <text>当前时间：</text>
+    <text>{{time}}</text>
+  </view>
+
+  <block>
+    <view class="blue-container">
+      <view class="section">
+        <view class="content">
+          <text>蓝牙初始化：</text>
+          <text>{{isbluetoothready?"ok":"尚未初始化"}}</text>
+        </view>
+        <view class="switch">
+          <switch checked="{{isbluetoothready}}" bindchange="switchBlueTooth" />
+        </view>
+      </view>
+      <view class="section" hidden="{{!isbluetoothready}}">
+        <button type="default" size="{{primarySize}}" loading="{{searchingstatus}}" plain="{{plain}}" disabled="{{disabled}}" bindtap="searchbluetooth">
+        {{searchingstatus?"搜索中":"搜索蓝牙"}} 
+        </button>
+      </view>
+      <block>
+        <view class="section" hidden="{{!isbluetoothready}}">
+          <view class="list-item {{deviceconnected? 'deviceconnected':''}}">
+            <text>设备名称：{{devices.devices[0].name}}</text>
+            <text>设备名称：{{devices.devices[0].deviceId}}</text>
+            <button id="{{item.deviceId}}" type="default" size="mini" bindtap="connectTO">
+            {{deviceconnected? "已连接":"连接"}}
+            </button>
+          </view>
+        </view>
+      </block>
+    </view>
+  </block>
+</view>

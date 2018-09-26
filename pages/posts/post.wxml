@@ -1,0 +1,16 @@
+<view class="container">
+  <view class="up-container" bindtap="onTapPower">
+    <image class="power-img" src="/images/power.png"></image>
+    <text class="power-text">开始使用</text>
+  </view>
+  <view class="down-container" bindtap="onTapHelp">
+    <view class="help">
+      <image class="help-img" src="/images/help.png"></image>
+      <text class="help-text">帮助</text>
+    </view>
+    <view class="set" bindtap="onTapSet">
+      <image class="set-img" src="/images/set.png"></image>
+      <text class="set-text">设置</text>
+    </view>
+  </view>
+</view>

@@ -1,0 +1,12 @@
+{
+  "pages": [
+    "pages/posts/power/power",
+    "pages/welcome/welcome",
+    "pages/posts/post",
+    "pages/posts/help/help",
+    "pages/posts/set/set"
+  ],
+  "window": {
+    "navigationBarBackgroundColor": "#336699"
+  }
+}

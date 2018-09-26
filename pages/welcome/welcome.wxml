@@ -1,0 +1,7 @@
+<view class="container">
+  <image class="sunny-icon" src="/images/sunny.png"></image>
+  <text class="Hello">Hello</text>
+  <view class="moto-container" bindtap="onTap">
+    <text class="moto">欢迎使用向阳伞</text>
+  </view>
+</view>
