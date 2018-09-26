@@ -45,9 +45,9 @@
       <block>
         <view class="section" hidden="{{!isbluetoothready}}">
           <view class="list-item {{deviceconnected? 'deviceconnected':''}}">
-            <text>设备名称：{{devices.devices[0].name}}</text>
-            <text>设备名称：{{devices.devices[0].deviceId}}</text>
-            <button id="{{item.deviceId}}" type="default" size="mini" bindtap="connectTO">
+            <text>设备ID：{{devices.deviceId}}</text>
+            <text>设备名称：{{devices.name}}</text>
+            <button id="{{devices.deviceId}}" type="default" size="mini" bindtap="connectTO">
             {{deviceconnected? "已连接":"连接"}}
             </button>
           </view>

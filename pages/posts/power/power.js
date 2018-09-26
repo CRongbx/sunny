@@ -136,13 +136,16 @@ Page({
           wx.onBluetoothDeviceFound(function(devices) {
             // 监听寻找新设备
             console.log("onBluetoothDeviceFound", devices)
-            temp.push(devices)
-            that.setData({
-              devices: temp
-            })
-            console.log("发现新的蓝牙设备")
-            console.log("设备id:" + devices.devices[0].deviceId)
-            console.log("设备name:" + devices.devices[0].name)
+            if (devices.devices[0].name == "MI Band 2") {
+              //这里设定向阳伞的单片机名字/id
+              temp=devices.devices[0];
+              that.setData({
+                devices: temp
+              })
+              console.log("发现新的蓝牙设备")
+              console.log("设备id:" +temp.deviceId)
+              console.log("设备name:" + temp.name)
+            }
           }) //onBluetoothDeviceFound
         }, //openBluetoothAdapter success
         fail: function(res) {
@@ -343,6 +346,6 @@ function getNowFormatData() {
     strDate = "0" + strDate;
   }
   var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate + " " + date.getHours() + seperator2 + date.getMinutes() + seperator2 + date.getSeconds();
-  
+
   return currentdate;
 }
