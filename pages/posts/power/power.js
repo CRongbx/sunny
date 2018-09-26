@@ -42,10 +42,8 @@ Page({
       /*返回 GPS 坐标*/
       success: function(res) {
         that.setData({
-          latitude: res.latitude,
-          /*浮点数，范围为-90~90，负数表示南纬 */
-          longitude: res.longitude,
-          /*浮点数，范围为-180~180，负数表示西经 */
+          latitude: res.latitude, //浮点数，范围为-90~90，负数表示南纬
+          longitude: res.longitude, //浮点数，范围为-180~180，负数表示西经 
         });
       }
     });
@@ -69,8 +67,8 @@ Page({
   },
 
   onPullDownRefresh: function() {
+    //下来刷新功能
     wx.showNavigationBarLoading() // 在标题栏中显示加载
-
     //重新加载获取位置
     this.getLocation();
     setTimeout(function() {
@@ -81,6 +79,7 @@ Page({
   },
 
   onPowerTap: function(event) {
+    //点击开关图标变换
     var isPowerOn = wx.getStorageSync('is_power_on');
     //开变关，关变开
     isPowerOn = !isPowerOn;
@@ -138,12 +137,12 @@ Page({
             console.log("onBluetoothDeviceFound", devices)
             if (devices.devices[0].name == "MI Band 2") {
               //这里设定向阳伞的单片机名字/id
-              temp=devices.devices[0];
+              temp = devices.devices[0];
               that.setData({
                 devices: temp
               })
               console.log("发现新的蓝牙设备")
-              console.log("设备id:" +temp.deviceId)
+              console.log("设备id:" + temp.deviceId)
               console.log("设备name:" + temp.name)
             }
           }) //onBluetoothDeviceFound
@@ -306,8 +305,8 @@ Page({
     } //else
   },
 
-  formSubmit: function(event) {
-    console.log("form发生了submit事件，携带数据：", event.detail.value.senddata)
+  submit: function(event) {
+    console.log("发生了submit事件，携带数据：")
     var senddata = event.detail.value.senddata;
     var that = this;
     let buffer = new ArrayBuffer(senddata.length)
@@ -330,22 +329,6 @@ Page({
 
   formReset: function() {
     console.log("form 发生了reset事件")
-  }
+  },
+
 })
-
-function getNowFormatData() {
-  var date = new Date();
-  var seperator1 = "-";
-  var seperator2 = ":";
-  var month = date.getMonth() + 1;
-  var strDate = date.getDate();
-  if (month >= 1 && month <= 9) {
-    month = "0" + month;
-  }
-  if (strDate >= 0 && strDate <= 9) {
-    strDate = "0" + strDate;
-  }
-  var currentdate = date.getFullYear() + seperator1 + month + seperator1 + strDate + " " + date.getHours() + seperator2 + date.getMinutes() + seperator2 + date.getSeconds();
-
-  return currentdate;
-}
