@@ -21,8 +21,8 @@ Page({
   },
 
   onLoad: function(options) {
-    this.getLocation();
-    this.getTime();
+    this.setLocation();
+    this.setTime();
 
     var isPowerOn = wx.getStorageSync('is_power_on');
     if (isPowerOn) {
@@ -35,7 +35,7 @@ Page({
     }
   },
 
-  getLocation: function() {
+  setLocation: function() {
     var that = this;
     wx.getLocation({
       type: 'wgs84',
@@ -49,7 +49,7 @@ Page({
     });
   },
 
-  getTime: function() {
+  setTime: function() {
     var time = util.formatTime(new Date());
     var year = util.getYear(new Date());
     var month = util.getMonth(new Date());
@@ -70,7 +70,7 @@ Page({
     //下来刷新功能
     wx.showNavigationBarLoading() // 在标题栏中显示加载
     //重新加载获取位置
-    this.getLocation();
+    this.setLocation();
     setTimeout(function() {
       //complete
       wx.hideNavigationBarLoading() //完成后停止加载
@@ -99,8 +99,8 @@ Page({
   },
 
   onRefreshTap: function(event) {
-    this.getLocation();
-    this.getTime();
+    this.setLocation();
+    this.setTime();
     wx.showToast({
       title: "刷新",
       duration: 1000,
@@ -305,30 +305,35 @@ Page({
     } //else
   },
 
-  submit: function(event) {
-    console.log("发生了submit事件，携带数据：")
-    var senddata = event.detail.value.senddata;
+  sendTap: function(event) {
+    console.log("开始向蓝牙传送数据")
+    // var senddata = event.detail.value.senddata;
+    // console.log(event.detail.value);
     var that = this;
-    let buffer = new ArrayBuffer(senddata.length)
+    let buffer = new ArrayBuffer(7)
+    //目前需要向向阳伞传入7个变量的数据
     let dataView = new DataView(buffer)
-    for (var i = 0; i < senddata.length; i++) {
-      dataView.setUint8(i, senddata.charAt(i).charCodeAt())
-    }
+    dataView.setUint16(0, parseInt(this.data.year))
+    dataView.setUint8(1, parseInt(this.data.month))
+    dataView.setUint8(2, parseInt(this.data.month))
+    // dataView.setFloat32(3, parseFloat(this.data.latitude))
+    // dataView.setFloat32(4, parseFloat(this.data.longitude))
+    dataView.setUint8(5,this.data.hour)
+    dataView.setUint8(6,this.data.month)
+    /*for (var i = 0; i < senddata.length; i++) {
+     dataView.setUint8(i, senddata.charAt(i).charCodeAt())
+     }*/
     wx.writeBLECharacteristicValue({
-      //向蓝牙设备写入数据
+      //向蓝牙设备写入二进制数据
       deviceId: that.data.connectedDeviceId,
       serviceId: serviceId,
       characteristicId: characteristicId,
-      value: buffer,
+      value: buffer, //ArrayBuffer类型
       success: function(res) {
         console.log(res)
         console.log('writeBLECharacteristicValue success!', res.errMsg)
       }
     })
-  },
-
-  formReset: function() {
-    console.log("form 发生了reset事件")
   },
 
 })

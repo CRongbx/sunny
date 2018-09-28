@@ -39,7 +39,7 @@
       </view>
       <view class="section" hidden="{{!isbluetoothready}}">
         <button type="default" size="{{primarySize}}" loading="{{searchingstatus}}" plain="{{plain}}" disabled="{{disabled}}" bindtap="searchbluetooth">
-        {{searchingstatus?"搜索中":"搜索蓝牙"}} 
+          {{searchingstatus?"搜索中":"搜索蓝牙"}}
         </button>
       </view>
       <block>
@@ -48,9 +48,10 @@
             <text>设备ID：{{devices.deviceId}}</text>
             <text>设备名称：{{devices.name}}</text>
             <button id="{{devices.deviceId}}" type="default" size="mini" bindtap="connectTO">
-            {{deviceconnected? "已连接":"连接"}}
+              {{deviceconnected? "已连接":"连接"}}
             </button>
           </view>
+           <text bindtap='sendTap'>SEND</text>
         </view>
       </block>
     </view>

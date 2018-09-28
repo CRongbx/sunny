@@ -59,7 +59,7 @@ text {
 .content{
   margin: auto;
   padding: auto;
-  position: absolute;
+  /* position: absolute; */
   top: 5px;
   left:10px;
 }
