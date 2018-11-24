@@ -1,7 +1,7 @@
 {
   "pages": [
-    "pages/posts/power/power",
     "pages/welcome/welcome",
+    "pages/posts/power/power",
     "pages/posts/post",
     "pages/posts/help/help",
     "pages/posts/set/set"

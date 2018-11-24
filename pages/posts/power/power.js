@@ -1,8 +1,8 @@
 var util = require('../../../utils/util.js');
 var app = getApp()
 var temp = []
-var serviceId = "00002A00-0000-1000-8000-00805F9B34FB"
-var characteristicId = "00002A00-0000-1000-8000-00805F9B34FB"
+var serviceId = "0000180A-0000-1000-8000-00805F9B34FB"
+var characteristicId = "00002A23-0000-1000-8000-00805F9B34FB"
 
 Page({
   data: {
@@ -135,7 +135,7 @@ Page({
           wx.onBluetoothDeviceFound(function(devices) {
             // 监听寻找新设备
             console.log("onBluetoothDeviceFound", devices)
-            if (devices.devices[0].name == "MI Band 2") {
+            if (devices.devices[0].name == "HC-08") {
               //这里设定向阳伞的单片机名字/id
               temp = devices.devices[0];
               that.setData({
@@ -145,6 +145,14 @@ Page({
               console.log("设备id:" + temp.deviceId)
               console.log("设备name:" + temp.name)
             }
+            // temp = devices.devices[0];
+            // that.setData({
+            //   devices: temp
+            // })
+            // console.log("发现新的蓝牙设备")
+            // console.log("设备id:" + temp.deviceId)
+            // console.log("设备name:" + temp.name)
+            
           }) //onBluetoothDeviceFound
         }, //openBluetoothAdapter success
         fail: function(res) {
@@ -272,9 +280,29 @@ Page({
             deviceconnected: true,
             connectedDeviceId: event.currentTarget.id
           })
+      wx.getBLEDeviceServices({
+  //!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+        //get BLE Device Services (like serviceId)
+        deviceId: event.currentTarget.id,
+        success: function(res) {
+          console.log('device services:',res.services);
+        //  serviceId = res.services[0].uuid;
+        },
+      })
 
+      wx.getBLEDeviceCharacteristics({
+        //get CharacteristicsId
+        deviceId: event.currentTarget.id,
+        serviceId: serviceId,
+        success: function(res) {
+           console.log('device getBLEDeviceCharacteristics:', res.characteristics)
+           res.characteristics[0].properties.write = true;
+          res.characteristics[0].properties.indicate = true;                     res.characteristics[0].properties.notify = true;           
+          // characteristicId = res.characteristics.CharacteristicsId
+        },
+      })
           wx.notifyBLECharacteristicValueChange({
-            deviceId: that.data.connectedDeviceId,
+            deviceId: event.currentTarget.id,
             serviceId: serviceId,
             characteristicId: characteristicId,
             state: true,
@@ -307,33 +335,71 @@ Page({
 
   sendTap: function(event) {
     console.log("开始向蓝牙传送数据")
-    // var senddata = event.detail.value.senddata;
-    // console.log(event.detail.value);
     var that = this;
-    let buffer = new ArrayBuffer(7)
-    //目前需要向向阳伞传入7个变量的数据
-    let dataView = new DataView(buffer)
-    dataView.setUint16(0, parseInt(this.data.year))
-    dataView.setUint8(1, parseInt(this.data.month))
-    dataView.setUint8(2, parseInt(this.data.month))
-    // dataView.setFloat32(3, parseFloat(this.data.latitude))
-    // dataView.setFloat32(4, parseFloat(this.data.longitude))
-    dataView.setUint8(5,this.data.hour)
-    dataView.setUint8(6,this.data.month)
-    /*for (var i = 0; i < senddata.length; i++) {
-     dataView.setUint8(i, senddata.charAt(i).charCodeAt())
-     }*/
-    wx.writeBLECharacteristicValue({
-      //向蓝牙设备写入二进制数据
-      deviceId: that.data.connectedDeviceId,
-      serviceId: serviceId,
-      characteristicId: characteristicId,
-      value: buffer, //ArrayBuffer类型
-      success: function(res) {
-        console.log(res)
-        console.log('writeBLECharacteristicValue success!', res.errMsg)
-      }
-    })
+    // let buffer = new ArrayBuffer(7)
+    // let buffer = new ArrayBuffer(1)
+    // let dataView = new DataView(buffer)
+    // //目前需要向向阳伞传入7个变量的数据
+    
+    // dataView.setUint16(0, parseInt(this.data.year))
+    // dataView.setUint8(1, parseInt(this.data.month))
+    // dataView.setUint8(2, parseInt(this.data.day))
+    // dataView.setUint8(3,this.data.hour)
+    // dataView.setUint8(4,this.data.minute)
+
+    // let buffer2 = new ArrayBuffer(8)
+    // let dataView2 = new DataView(buffer2)
+    // dataView2.setFloat32(0, parseFloat(38.90))
+    // dataView2.setFloat32(4, parseFloat(118.45))
+    // wx.writeBLECharacteristicValue({
+    //   //向蓝牙设备写入二进制数据
+    //   deviceId: that.data.connectedDeviceId,
+    //   serviceId: serviceId,
+    //   characteristicId: characteristicId,
+    //   value: buffer2, //ArrayBuffer类型
+    //   success: function (res) {
+    //     console.log(res)
+    //     console.log('writeBLECharacteristicValue success!', res.errMsg)
+    //     wx.showToast({
+    //       title: '第2次发送 success!!',
+    //     })
+    //   }
+    // })
+
+  //以下为测试代码
+  let buffer = new ArrayBuffer(1);
+  let dataView = new DataView(buffer)
+  dataView.setUint8(0,0);
+
+  wx.writeBLECharacteristicValue({
+    deviceId: '78:04:73:C6:E5:D8',
+    serviceId: '0000180A-0000-1000-8000-00805F9B34FB',
+    characteristicId: '00002A23-0000-1000-8000-00805F9B34FB',
+    value: buffer,
+    success: function(res) {
+      console.log(res)
+      wx.showToast({
+           title: '数据发送 success!!',
+        })
+      wx.readBLECharacteristicValue({
+        deviceId: '78:04:73:C6:E5:D8',
+        serviceId: '0000180A-0000-1000-8000-00805F9B34FB',
+        characteristicId:'00002A23-0000-1000-8000-00805F9B34FB',
+        success: function (res) {
+          wx.showToast({
+            title: 'readBLECharacteristicValue success!!',
+          })
+        },
+      })
+    },
+    fail: function(res){
+      console.log(res)
+      wx.showToast({
+        title: '数据写入失败！',
+      })
+    }
+  })
+
   },
 
 })
